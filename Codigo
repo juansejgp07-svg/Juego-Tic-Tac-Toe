@@ -1,0 +1,87 @@
+#include <iostream>
+using namespace std;
+
+void mostrarTablero(char t[]) {
+    cout << "\n";
+    cout << " " << t[0] << " | " << t[1] << " | " << t[2] << " \n";
+    cout << "---+---+---\n";
+    cout << " " << t[3] << " | " << t[4] << " | " << t[5] << " \n";
+    cout << "---+---+---\n";
+    cout << " " << t[6] << " | " << t[7] << " | " << t[8] << " \n";
+    cout << "\n";
+}
+
+bool hayGanador(char t[], char j) {
+    int c[8][3] = {
+        {0,1,2},{3,4,5},{6,7,8}, // filas
+        {0,3,6},{1,4,7},{2,5,8}, // columnas
+        {0,4,8},{2,4,6}          // diagonales
+    };
+    for (auto &r : c)
+        if (t[r[0]] == j && t[r[1]] == j && t[r[2]] == j)
+            return true;
+    return false;
+}
+
+bool tableroLleno(char t[]) {
+    for (int i = 0; i < 9; i++)
+        if (t[i] == ' ') return false;
+    return true;
+}
+
+int main() {
+    char t[9] = {' ',' ',' ',' ',' ',' ',' ',' ',' '};
+    char jugador = 'X';
+    int pos;
+    bool fin = false;
+
+    cout << "=== JUEGO: TRES EN RAYA ===" << endl;
+    cout << "Numeración del tablero:\n";
+    cout << " 1 | 2 | 3\n";
+    cout << "---+---+---\n";
+    cout << " 4 | 5 | 6\n";
+    cout << "---+---+---\n";
+    cout << " 7 | 8 | 9\n";
+    cout << "\n";
+
+    while (!fin) {
+        mostrarTablero(t);
+        cout << "Turno del jugador " << jugador << ". Ingresa una posición (1-9): ";
+        cin >> pos;
+
+        if (cin.fail() || pos < 1 || pos > 9) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Entrada inválida. Usa números del 1 al 9.\n";
+            continue;
+        }
+
+        pos--; // Convertir a índice 0–8
+
+        if (t[pos] != ' ') {
+            cout << "Esa casilla ya está ocupada. Intenta otra.\n";
+            continue;
+        }
+
+        t[pos] = jugador;
+
+        if (hayGanador(t, jugador)) {
+            mostrarTablero(t);
+            cout << "🎉 ¡Jugador " << jugador << " ha ganado! 🎉\n";
+            fin = true;
+        } 
+        else if (tableroLleno(t)) {
+            mostrarTablero(t);
+            cout << "🤝 ¡Empate!\n";
+            fin = true;
+        } 
+        else {
+            jugador = (jugador == 'X') ? 'O' : 'X';
+        }
+    }
+
+    cout << "\nGracias por jugar :)\n";
+    return 0;
+}
+
+
